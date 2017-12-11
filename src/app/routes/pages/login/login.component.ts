@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
       this.loginLoadding = true;
       this.spinnerService.show();
       return new Promise((resolve, reject) => {
-        this.http.post('login', value, {observe: 'response'})
+        this.http.post('login', value)
           .subscribe((resp: any) => {
             this.spinnerService.hide();
             localStorage.setItem('token', resp.token);

@@ -3,7 +3,7 @@ import { NgModule, LOCALE_ID, APP_INITIALIZER, Injector } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LocalStorageService } from 'angular-web-storage';
-
+import { JwtModule } from '@auth0/angular-jwt';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { AppComponent } from './app.component';
@@ -13,16 +13,17 @@ import { StartupService } from './core/services/startup.service';
 import { MenuService } from './core/services/menu.service';
 import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { SettingsService } from './core/services/settings.service';
-import { JwtModule } from '@auth0/angular-jwt';
 import { TokenInterceptor } from '@core/net/token/token.interceptor';
 import { AuthGuard } from './core/net/token/login.guard';
 
 export function StartupServiceFactory(startupService: StartupService): Function {
     return () => startupService.load();
 }
+
 export function tokenGetter() {
     return localStorage.getItem('token');
 }
+
 @NgModule({
     declarations: [
         AppComponent
@@ -31,10 +32,10 @@ export function tokenGetter() {
         BrowserModule,
         BrowserAnimationsModule,
         SharedModule.forRoot(),
+        Ng4LoadingSpinnerModule.forRoot(),
         CoreModule,
         LayoutModule,
         RoutesModule,
-        Ng4LoadingSpinnerModule.forRoot(),
         JwtModule.forRoot({
             config: {
               tokenGetter: tokenGetter,
@@ -57,6 +58,9 @@ export function tokenGetter() {
         },
         AuthGuard
     ],
+    exports: [
+        JwtModule
+    ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

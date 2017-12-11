@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { NzMessageService } from 'ng-zorro-antd';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 @Injectable()
 export class UsersService {
-  randomUserUrl = 'https://api.randomuser.me/';
 
-  getUsers(pageIndex = 1, pageSize = 10, sortField, sortOrder, genders) {
-    let params = new HttpParams()
+  getUsers(pageIndex = 1, pageSize = 10) {
+    const params = new HttpParams()
       .append('page', `${pageIndex}`)
-      .append('results', `${pageSize}`)
-      .append('sortField', sortField)
-      .append('sortOrder', sortOrder);
-    genders.forEach(gender => {
-      params = params.append('gender', gender);
-    });
-    return this.http.get(`${this.randomUserUrl}`, {
+      .append('results', `${pageSize}`);
+    return this.http.get('admin', {
       params: params
     });
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public _message: NzMessageService) {
   }
 }
