@@ -1,6 +1,6 @@
 {
     "app": {
-        "name": "Alain",
+        "name": "好停车",
         "description": "Ng-zorro admin panel front-end framework"
     },
     "user": {
@@ -9,6 +9,24 @@
         "email": "cipchk@qq.com"
     },
     "menu": [{
+        "text": "主导航1",
+        "group": true,
+        "children": [{
+            "text": "管理员",
+            "link": "/admins",
+            "icon": "icon-speedometer",
+            "children": [{
+                "text": "用户管理",
+                "link": "/admins/users"
+            }, {
+                "text": "权限",
+                "link": "/admins/permissions"
+            }, {
+                "text": "角色",
+                "link": "/admins/roles"
+            }]
+        }]
+    },{
         "text": "主导航",
         "translate": "main_navigation",
         "group": true,
@@ -17,10 +35,6 @@
             "link": "/dashboard",
             "icon": "icon-speedometer"
         }, {
-            "text": "管理员",
-            "link": "/admins",
-            "icon": "icon-speedometer"
-        },{
             "text": "快捷菜单",
             "translate": "shortcut",
             "icon": "icon-rocket",

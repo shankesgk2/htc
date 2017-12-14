@@ -9,6 +9,8 @@ import { SharedModule } from '@shared/shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from '@core/net/token/token.interceptor';
 import { JwtInterceptor } from '@auth0/angular-jwt';
+import { RolesComponent } from 'app/routes/admins/roles/roles.component';
+import { PermissionsComponent } from './permissions/permissions.component';
 
 
 @NgModule({
@@ -21,8 +23,10 @@ import { JwtInterceptor } from '@auth0/angular-jwt';
   ],
   declarations: [
     UsersComponent,
-    OperateComponent
-  ],
+    OperateComponent,
+    RolesComponent,
+    PermissionsComponent
+],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}

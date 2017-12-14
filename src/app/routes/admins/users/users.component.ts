@@ -19,7 +19,7 @@ export class UsersComponent implements OnInit {
     this.refreshData(true);
   }
 
-  constructor(private _randomUser: UsersService) {
+  constructor(private user: UsersService) {
   }
 
   refreshData(reset = false) {
@@ -27,9 +27,7 @@ export class UsersComponent implements OnInit {
       this._current = 1;
     }
     this._loading = true;
-    // const selectedGender = this._filterGender.filter(item => item.value).map(item => item.name);
-    this._randomUser.getUsers(this._current, this._pageSize).subscribe((data: any) => {
-      console.log(data);
+    this.user.getUsers(this._current, this._pageSize).subscribe((data: any) => {
       this._loading = false;
       this._total = data.total;
       this._dataSet = data.data;

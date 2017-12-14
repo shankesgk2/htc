@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { NzMessageService } from 'ng-zorro-antd';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
@@ -16,6 +15,8 @@ export class UsersService {
     });
   }
 
-  constructor(private http: HttpClient, public _message: NzMessageService) {
+  getUser(id = 0) {
+    return this.http.get('admin/' + id);
   }
+  constructor(private http: HttpClient) {}
 }
