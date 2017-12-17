@@ -3,9 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl, AsyncValidatorFn, AbstractControl, ValidatorFn } from '@angular/forms';
 import { UsersService } from 'app/routes/admins/users/users.services';
 import { NzMessageService } from 'ng-zorro-antd';
+import { _HttpClient } from '@core/services/http.client';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { ArrayObservable } from 'rxjs/observable/ArrayObservable';
-import { map, delay, debounceTime } from 'rxjs/operators';
+import 'rxjs/add/observable/throw';
+import { TitleService } from '@core/services/title.service';
 
 @Component({
   selector: 'app-operate',
@@ -16,83 +18,87 @@ import { map, delay, debounceTime } from 'rxjs/operators';
 export class OperateComponent implements OnInit {
   public form: FormGroup;
   private id;
-  public actionName: String = '添加管理员';
-  public actionBtn: String = '添加';
-  public pwPlaceHolder: String = '不修改密码请留空';
+  public _loading = false;
+  private _loadingId;
+  public actionName = '添加管理员';
+  public actionBtn = '添加';
+  public pwPlaceHolder = '不修改密码请留空';
   public user: any;
-  constructor(private routeInfo: ActivatedRoute, private userSvc: UsersService, private fb: FormBuilder, private msg: NzMessageService) { }
+  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private userSvc: UsersService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService) { }
 
-  submitForm() {
-    // tslint:disable-next-line:forin
+  submitForm(): Promise<any> {
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
     }
-    console.log('log', this.form.value);
+
+    this._loading = true;
+    this._loadingId = this.msg.loading('提交中...', { nzDuration: 0 }).messageId;
     if (this.form.valid) {
-      console.log('log', this.form.controls['password'].value);
-      this.msg.success('Successed!');
+      return new Promise((resolve, reject) => {
+        const a = this.http.post_patch('admin', this.id, this.form.value, { observe: 'response' })
+          .subscribe((resp: HttpResponse<any>) => {
+            console.log(resp);
+            this._loading = false;
+            this.msg.remove(this._loadingId);
+            if (resp.status === 201) {
+              this.msg.success(this.actionName + '成功');
+            } else {
+
+            }
+            resolve(resp);
+            return true;
+          }, (error: HttpErrorResponse) => {
+            console.log(error);
+            
+            this._loading = false;
+            this.msg.remove(this._loadingId);
+          });
+      });
     } else {
-      this.msg.error('Fail!');
+      this.msg.error('请检查表单是否填写完整');
     }
   }
 
   confirmationValidator(reverse: boolean = false): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (this.form === null || this.form === undefined) return;
-      const cp = this.form.controls['checkPassword'].value;
+      const cp = this.form.controls['password_confirmation'].value;
       const p = this.form.controls['password'].value;
 
       if (cp === '' && p === '') {
-        this.form.controls['checkPassword'].setErrors(null);
+        this.form.controls['password_confirmation'].setErrors(null);
         return;
       }
       const checked = cp === p ? true : false;
       if (p) {
-        this.form.controls['checkPassword'].setErrors({ required: true });
+        this.form.controls['password_confirmation'].setErrors({ required: true });
       }
       if (!reverse) {
         return checked ? null : { checked: true };
       } else if (reverse && cp) {
         if (!checked) {
-          this.form.controls['checkPassword'].setErrors({ checked: true });
+          this.form.controls['password_confirmation'].setErrors({ checked: true });
         } else {
-          this.form.controls['checkPassword'].setErrors(null);
+          this.form.controls['password_confirmation'].setErrors(null);
         }
         return;
       }
     };
   }
-  // confirmationValidator = (control: FormControl, reverse: boolean = false): { [key: string]: boolean } => {
-  //   if (this.form === null || this.form === undefined) return;
-  //   // console.log(this.form.controls['checkPassword'].value === this.form.controls['password'].value);
-
-  //   console.log('log', control.value);
-  //   const checked = this.form.controls['checkPassword'].value === this.form.controls['password'].value ? true : false;
-  //   if (!reverse) {
-  //     console.log('log', '焦点在重复密码');
-  //     return checked ? null : { checked: true };
-  //   } else if (reverse && this.form.controls['checkPassword'].value) {
-  //     console.log('log', '焦点在密码');
-  //     if (!checked) {
-  //       console.log('log', '焦点在密码，验证未通过');
-  //       this.form.controls['checkPassword'].setErrors({ checked: true });
-  //     }
-  //     console.log('\r\n');
-  //     return;
-  //   }
-  // }
 
   get email() { return this.form.controls.email; }
+  get name() { return this.form.controls.name; }
   get password() { return this.form.controls.password; }
-  get checkPassword() { return this.form.controls.checkPassword; }
+  get password_confirmation() { return this.form.controls.password_confirmation; }
   get truename() { return this.form.controls.truename; }
 
   ngOnInit() {
     this.form = this.fb.group({
+      name: [null, [Validators.required]],
       email: [null, [Validators.email]],
       truename: [null, [Validators.required]],
       password: [null, this.confirmationValidator(true)],
-      checkPassword: [null, this.confirmationValidator(false)]
+      password_confirmation: [null, this.confirmationValidator(false)]
     });
     this.id = this.routeInfo.snapshot.queryParams['id'];
     if (this.id) {
@@ -100,17 +106,17 @@ export class OperateComponent implements OnInit {
       this.actionBtn = '修改';
       this.pwPlaceHolder = '不修改密码请留空';
       this.user = this.userSvc.getUser(this.id).subscribe((data: any) => {
-        this.form.setValue({
+        this.form.patchValue({
+          'name': data.name,
           'truename': data.truename,
-          'email': data.email,
-          'password': '',
-          'checkPassword': ''
+          'email': data.email
         });
       });
     } else {
       this.pwPlaceHolder = '请填写密码';
       this.form.controls['password'].setValidators([Validators.required, this.confirmationValidator(true)]);
     }
+    this.titleSvc.setTitle(this.actionName);
   }
   getFormControl(name: string) {
     return this.form.controls[name];

@@ -1,10 +1,12 @@
 // tslint:disable:no-console class-name
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import swal from 'sweetalert2';
 import 'rxjs/add/operator/do';
 import * as moment from 'moment';
 import { environment } from '../../../environments/environment';
+import { NzMessageService } from 'ng-zorro-antd';
 
 /**
  * 封装HttpClient，主要解决：
@@ -14,7 +16,7 @@ import { environment } from '../../../environments/environment';
  */
 @Injectable()
 export class _HttpClient {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private _msg: NzMessageService) { }
 
     private _loading = false;
 
@@ -23,10 +25,40 @@ export class _HttpClient {
         return this._loading;
     }
 
+    private error(error) {
+        if (error instanceof HttpErrorResponse) {
+            switch (error.status) {
+                case 422: // 表单验证错误
+                    const error_body = error.error.errors;
+                    if (error_body) {
+                        console.log('error_body', error_body);
+                        const msg: Array<any> = [];
+                        for (const key in error_body) {
+                            for (const _msg of error_body[key]) {
+                                msg.push(_msg);
+                            }
+                        }
+                        swal({
+                            title: '请求数据错误',
+                            html: msg.join('<br>'),
+                            type: 'error',
+                            confirmButtonText: '确定'
+                        });
+                    }
+                    break;
+                default:
+                    this._msg.error(error.message);
+                    break;
+            }
+        } else {
+            this._msg.error('系统异常，请稍后再试');
+        }
+    }
+
+
     parseParams(params: any): HttpParams {
         let ret = new HttpParams();
         if (params) {
-            // tslint:disable-next-line:forin
             for (const key in params) {
                 let _data = params[key];
                 // 将时间转化为：时间戳 (秒)
@@ -40,12 +72,10 @@ export class _HttpClient {
     }
 
     private begin() {
-        console.time('http');
         this._loading = true;
     }
 
     private end() {
-        console.timeEnd();
         this._loading = false;
     }
 
@@ -58,18 +88,18 @@ export class _HttpClient {
      * GET请求
      *
      * @param {string} url URL地址
-     * @param {*} [params] 请求参数
+     * @param {*} [option] 请求选项
      */
-    get(url: string, params?: any): Observable<any> {
+    get(url: string, option?: any): Observable<any> {
         this.begin();
+        if (option && option.params) option.params = this.parseParams(option.params);
         return this.http
-            .get(url, {
-                params: this.parseParams(params)
-            })
+            .get(url, option)
             .do(() => this.end())
             .catch((res) => {
+                this.error(res);
                 this.end();
-                return res;
+                throw res;
             });
     }
 
@@ -78,18 +108,18 @@ export class _HttpClient {
      *
      * @param {string} url URL地址
      * @param {*} [body] body内容
-     * @param {*} [params] 请求参数
+     * @param {*} [option] 请求选项
      */
-    post(url: string, body?: any, params?: any): Observable<any> {
+    post(url: string, body?: any, option?: any): Observable<any> {
         this.begin();
+        if (option && option.params) option.params = this.parseParams(option.params);
         return this.http
-            .post(url, body || null, {
-                params: this.parseParams(params)
-            })
+            .post(url, body || null, option)
             .do(() => this.end())
             .catch((res) => {
+                this.error(res);
                 this.end();
-                return res;
+                throw res;
             });
     }
 
@@ -97,18 +127,94 @@ export class _HttpClient {
      * DELETE请求
      *
      * @param {string} url URL地址
-     * @param {*} [params] 请求参数
+     * @param {*} [option] 请求选项
      */
-    delete(url: string, params?: any): Observable<any> {
+    delete(url: string, option?: any): Observable<any> {
         this.begin();
+        if (option && option.params) option.params = this.parseParams(option.params);
         return this.http
-            .delete(url, {
-                params: this.parseParams(params)
-            })
+            .delete(url, option)
             .do(() => this.end())
             .catch((res) => {
+                this.error(res);
                 this.end();
-                return res;
+                throw res;
             });
+    }
+
+    /**
+     * PUT请求
+     *
+     * @param {string} url URL地址
+     * @param {*} [body] body内容
+     * @param {*} [option] 请求选项
+     */
+    put(url: string, body?: any, option?: any): Observable<any> {
+        this.begin();
+        if (option && option.params) option.params = this.parseParams(option.params);
+        return this.http
+            .put(url, body || null, option)
+            .do(() => this.end())
+            .catch((res) => {
+                this.error(res);
+                this.end();
+                throw res;
+            });
+    }
+
+    /**
+     * PATCH请求
+     *
+     * @param {string} url URL地址
+     * @param {*} [body] body内容
+     * @param {*} [option] 请求选项
+     */
+    patch(url: string, body?: any, option?: any): Observable<any> {
+        this.begin();
+        if (option && option.params) option.params = this.parseParams(option.params);
+        return this.http
+            .patch(url, body || null, option)
+            .do(() => this.end())
+            .catch((res) => {
+                this.error(res);
+                this.end();
+                throw res;
+            });
+    }
+
+    /**
+     * POST或PATCH请求
+     *
+     * @param {string} url URL地址
+     * @param {*} id 操作ID
+     * @param {*} [body] body内容
+     * @param {*} [option] 请求选项
+     */
+    post_patch(url: string, id: any, body?: any, option?: any): Observable<any> {
+        this.begin();
+        if (id) {
+            const _url = url + '/' + id;
+            return this.patch(_url, body, option);
+        } else {
+            return this.post(url, body, option);
+        }
+    }
+
+    /**
+     * POST或PUT请求
+     *
+     * @param {string} url URL地址
+     * @param {*} id 操作ID
+     * @param {*} [body] body内容
+     * @param {*} [option] 请求选项
+     */
+    post_put(url: string, id: any, body?: any, option?: any): Observable<any> {
+        this.begin();
+        if (id) {
+            const _url = url + '/' + id;
+            return this.put(_url, body, option);
+        } else {
+            return this.post(url, body, option);
+        }
     }
 }

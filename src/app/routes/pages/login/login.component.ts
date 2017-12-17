@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   constructor(public settings: SettingsService, private spinnerService: Ng4LoadingSpinnerService, private loginserv: LoginService, public _message: NzMessageService, private http: _HttpClient, fb: FormBuilder, private router: Router) {
     this.loginLoadding = false;
     this.valForm = fb.group({
-      email: [null, Validators.compose([Validators.required, Validators.email])],
+      email: [null, Validators.required],
       password: [null, Validators.required],
       remember_me: [null]
     });
@@ -43,10 +43,11 @@ export class LoginComponent implements OnInit {
       this.loginLoadding = true;
       this.spinnerService.show();
       return new Promise((resolve, reject) => {
-        this.http.post('login', value)
-          .subscribe((resp: any) => {
+        this.http.post('login', value, { observe: 'response' })
+          .subscribe((resp) => {
             this.spinnerService.hide();
-            localStorage.setItem('token', resp.token);
+            // if (resp.status)
+            localStorage.setItem('token', resp.body.token);
             this.router.navigate(['dashboard']);
             resolve(resp);
           }, (err: HttpErrorResponse) => {
