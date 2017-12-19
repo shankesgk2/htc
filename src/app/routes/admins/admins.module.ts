@@ -11,6 +11,7 @@ import { TokenInterceptor } from '@core/net/token/token.interceptor';
 import { JwtInterceptor } from '@auth0/angular-jwt';
 import { RolesComponent } from 'app/routes/admins/roles/roles.component';
 import { PermissionsComponent } from './permissions/permissions.component';
+import { TreeModule } from 'angular-tree-component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { PermissionsComponent } from './permissions/permissions.component';
     SharedModule,
     ReactiveFormsModule,
     FormsModule,
-    AdminsRoutes
+    AdminsRoutes,
+    TreeModule
   ],
   declarations: [
     UsersComponent,

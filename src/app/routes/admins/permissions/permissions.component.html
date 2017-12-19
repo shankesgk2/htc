@@ -1,3 +1,42 @@
-<p>
-  permissions works!
-</p>
+<div class="content__title my0">
+  <h1>权限管理</h1>
+  <button [routerLink]="['operate']" nz-button [nzSize]="'large'" [nzType]="'primary'">
+    <i class="anticon anticon-plus"></i>
+    <span>添加权限</span>
+  </button>
+</div>
+
+
+
+<nz-layout class="flex-layout">
+  <nz-sider class="bg-white0">
+      <tree-root [focused]="true" [nodes]="nodes"></tree-root>    
+  </nz-sider>
+  <nz-layout>
+    <nz-content class="bg-white">Content</nz-content>
+  </nz-layout>
+</nz-layout>
+
+<div nz-row [nzGutter]="24" class="py-lg">
+  <div nz-col [nzSpan]="6">
+      <nz-card nzTitle="Personal settings" nzNoPadding>
+        <tree-root [focused]="true" [nodes]="nodes"></tree-root> 
+      </nz-card>
+  </div>
+  <div nz-col [nzSpan]="18">
+      <nz-card nzTitle="Public profile">
+          <div nz-row [nzGutter]="64">
+              <div nz-col [nzSpan]="16">
+dfgadf
+              </div>
+              <div nz-col [nzSpan]="8">
+                  <h4>Profile picture</h4>
+                  <img src="./assets/img/avatar.jpg" style="width: 100%;">
+                  <button nz-button class="ant-btn__block">
+                      <span>Upload new picture</span>
+                  </button>
+              </div>
+          </div>
+      </nz-card>
+  </div>
+</div>
