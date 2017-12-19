@@ -5,6 +5,7 @@ import { PagesModule } from './pages/pages.module';
 
 import { routes } from './routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ParksComponent } from './parks/parks.component';
 
 @NgModule({
     imports: [
@@ -13,11 +14,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
         PagesModule
     ],
     declarations: [
-        DashboardComponent
+        DashboardComponent,
+        ParksComponent
     ],
     exports: [
         RouterModule
     ]
 })
 
-export class RoutesModule {}
+export class RoutesModule { }
