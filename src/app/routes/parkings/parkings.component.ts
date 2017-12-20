@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from 'app/routes/admins/users/users.services';
+import { ParkingsService } from 'app/routes/parkings/parkings.service';
 
 @Component({
-  selector: 'app-users',
-  templateUrl: './users.component.html',
-  providers: [ UsersService ]
+  selector: 'app-parks',
+  templateUrl: './parkings.component.html',
+  providers: [ParkingsService]
 })
-export class UsersComponent implements OnInit {
+export class ParkingsComponent implements OnInit {
 
   _current = 1;
   _pageSize = 10;
@@ -18,7 +18,7 @@ export class UsersComponent implements OnInit {
     this.refreshData(true);
   }
 
-  constructor(private user: UsersService) {
+  constructor(private park: ParkingsService) {
   }
 
   refreshData(reset = false) {
@@ -26,7 +26,7 @@ export class UsersComponent implements OnInit {
       this._current = 1;
     }
     this._loading = true;
-    this.user.getUsers(this._current, this._pageSize).subscribe((data: any) => {
+    this.park.getParks(this._current, this._pageSize).subscribe((data: any) => {
       this._loading = false;
       this._total = data.total;
       this._dataSet = data.data;
@@ -34,12 +34,11 @@ export class UsersComponent implements OnInit {
 
 
   }
-  deleteAdmin() {
+  deletePark() {
     
   }
 
   ngOnInit() {
     this.refreshData();
   }
-
 }

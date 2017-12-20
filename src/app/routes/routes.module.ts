@@ -5,8 +5,8 @@ import { PagesModule } from './pages/pages.module';
 
 import { routes } from './routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ParksComponent } from './parks/parks.component';
-import { ParkOperateComponent } from 'app/routes/parks/park-operate/park-operate.component';
+import { ParkingsComponent } from './parkings/parkings.component';
+import { ParkingOperateComponent } from 'app/routes/parkings/parking-operate/parking-operate.component';
 
 @NgModule({
     imports: [
@@ -16,8 +16,8 @@ import { ParkOperateComponent } from 'app/routes/parks/park-operate/park-operate
     ],
     declarations: [
         DashboardComponent,
-        ParksComponent,
-        ParkOperateComponent
+        ParkingsComponent,
+        ParkingOperateComponent
     ],
     exports: [
         RouterModule

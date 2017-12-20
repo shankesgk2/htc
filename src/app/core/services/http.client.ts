@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import swal from 'sweetalert2';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/observable/throw';
 import * as moment from 'moment';
 import { environment } from '../../../environments/environment';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -117,6 +118,7 @@ export class _HttpClient {
             .post(url, body || null, option)
             .do(() => this.end())
             .catch((res) => {
+                console.log(res);
                 this.error(res);
                 this.end();
                 throw res;

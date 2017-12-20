@@ -6,7 +6,6 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@core/services/http.client';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
 import { TitleService } from '@core/services/title.service';
 
 @Component({
@@ -42,14 +41,10 @@ export class OperateComponent implements OnInit {
             this.msg.remove(this._loadingId);
             if (resp.status === 201) {
               this.msg.success(this.actionName + '成功');
-            } else {
-
             }
             resolve(resp);
             return true;
-          }, (error: HttpErrorResponse) => {
-            console.log(error);
-            
+          }, (error: HttpErrorResponse) => {           
             this._loading = false;
             this.msg.remove(this._loadingId);
           });

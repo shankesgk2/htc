@@ -1,0 +1,55 @@
+<div class="content__title">
+  <h1>停车场管理</h1>
+  <button [routerLink]="['operate']" nz-button [nzSize]="'large'" [nzType]="'primary'">
+    <i class="anticon anticon-plus"></i>
+    <span>添加停车场</span>
+  </button>
+</div>
+
+<nz-card>
+  <nz-table #nzTable [nzAjaxData]="_dataSet" nzShowSizeChanger [nzLoading]="_loading" [nzTotal]="_total" [(nzPageIndex)]="_current"
+    (nzPageIndexChange)="refreshData()" [(nzPageSize)]="_pageSize" (nzPageSizeChange)="refreshData(true)">
+    <thead nz-thead>
+      <tr>
+        <th nz-th>
+          <span>ID</span>
+        </th>
+        <th nz-th>
+          <span>名称</span>
+        </th>
+        <th nz-th>
+          <span>道闸</span>
+        </th>
+        <th nz-th>
+          <span>位置</span>
+        </th>
+        <th nz-th>
+          <span>创建时间</span>
+        </th>
+        <th nz-th>
+          <span>更新时间</span>
+        </th>
+        <th nz-th>
+            <span>操作</span>
+          </th>
+      </tr>
+    </thead>
+    <tbody nz-tbody>
+      <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+        <td nz-td>{{data.id}}</td>
+        <td nz-td>{{data.name}}</td>
+        <td nz-td>{{data.name}}</td>
+        <td nz-td>{{data.email}}</td>
+        <td nz-td>{{data.created_at}}</td>
+        <td nz-td>{{data.updated_at}}</td>
+        <td nz-td>
+          <a [routerLink]="['operate']" [queryParams]="{ id: data.id }">修改</a>
+          <span nz-table-divider></span>
+          <nz-popconfirm [nzTitle]="'确定要删除吗？'" [nzOkText]="'是'" [nzCancelText]="'取消'" (nzOnConfirm)="deleteAdmin()">
+            <a nz-popconfirm>删除</a>
+          </nz-popconfirm>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
