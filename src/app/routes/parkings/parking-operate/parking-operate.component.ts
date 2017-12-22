@@ -1,39 +1,65 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ParkingsService } from 'app/routes/parkings/parkings.service';
 import { ActivatedRoute } from '@angular/router';
 import { _HttpClient } from '@core/services/http.client';
 import { NzMessageService } from 'ng-zorro-antd';
 import { TitleService } from '@core/services/title.service';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { FormArray } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-park-operate',
   templateUrl: './parking-operate.component.html',
-  styles: []
+  providers: [ParkingsService]
 })
 export class ParkingOperateComponent implements OnInit {
   public form: FormGroup;
   private id;
   public actionName = '添加停车场';
   public actionBtn = '添加';
+  public _loading = false;
+  private _loadingId;
   public park: any;
-  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private userSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService) { }
+  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService) { }
 
+  submitForm() {
+    this._loading = true;
+    this._loadingId = this.msg.loading('提交中...', { nzDuration: 0 }).messageId;
+    if (this.form.valid) {
+      return new Promise((resolve, reject) => {
+        const a = this.http.post_patch('parking', this.id, this.form.value, { observe: 'response' })
+          .subscribe((resp: HttpResponse<any>) => {
+            this.msg.remove(this._loadingId);
+            if (resp.status === 201) {
+              this.msg.success(this.actionName + '成功');
+            }
+            resolve(resp);
+            return true;
+          }, (error: HttpErrorResponse) => {
+            this._loading = false;
+            this.msg.remove(this._loadingId);
+          });
+      });
+    } else {
+      this.msg.error('请检查表单是否填写完整');
+    }
+  }
+  get name() { return this.form.controls.name; }
+  get barrier_gate() { return this.form.controls.barrier_gate; }
   ngOnInit() {
     this.form = this.fb.group({
       name: [null, [Validators.required]],
-      email: [null, [Validators.email]],
-      truename: [null, [Validators.required]],
+      barrier_gate: [null, [Validators.required]]
     });
     this.id = this.routeInfo.snapshot.queryParams['id'];
     if (this.id) {
       this.actionName = '修改停车场';
       this.actionBtn = '修改';
-      this.park = this.userSvc.getPark(this.id).subscribe((data: any) => {
+      this.park = this.parksSvc.getPark(this.id).subscribe((data: any) => {
         this.form.patchValue({
           'name': data.name,
-          'truename': data.truename,
-          'email': data.email
+          'barrier_gate': data.barrier_gate
         });
       });
     }

@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { _HttpClient } from '@core/services/http.client';
 @Injectable()
 export class UsersService {
 
   getUsers(pageIndex = 1, pageSize = 10) {
-    const params = new HttpParams()
-      .append('page', `${pageIndex}`)
-      .append('results', `${pageSize}`);
+    const params = {
+      'page': pageIndex,
+      'results': pageSize
+    };
     return this.http.get('admin', {
       params: params
     });
@@ -15,5 +17,5 @@ export class UsersService {
   getUser(id = 0) {
     return this.http.get('admin/' + id);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: _HttpClient) { }
 }

@@ -117,7 +117,7 @@ export class MenuService {
             }
         });
         if (!findItem) {
-            console.warn(`not found page name: ${url}`);
+            // console.warn(`not found page name: ${url}`);
             return;
         }
 
