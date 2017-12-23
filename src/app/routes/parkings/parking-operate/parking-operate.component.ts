@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { ParkingsService } from 'app/routes/parkings/parkings.service';
 import { ActivatedRoute } from '@angular/router';
 import { _HttpClient } from '@core/services/http.client';
 import { NzMessageService } from 'ng-zorro-antd';
 import { TitleService } from '@core/services/title.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { FormArray } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-park-operate',
@@ -50,7 +49,9 @@ export class ParkingOperateComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       name: [null, [Validators.required]],
-      barrier_gate: [null, [Validators.required]]
+      barrier_gates: this.fb.array([
+        this.buildBarrier_gate()
+      ])
     });
     this.id = this.routeInfo.snapshot.queryParams['id'];
     if (this.id) {
@@ -66,4 +67,21 @@ export class ParkingOperateComponent implements OnInit {
     this.titleSvc.setTitle(this.actionName);
   }
 
+  buildBarrier_gate(val: string = null) {
+    return this.fb.group({
+      Bid: [null, Validators.required],
+      Bname: [val, Validators.required],
+      Bdescription: ''
+    });
+  }
+
+  addBarrier_gate() {
+    const control = <FormArray>this.form.controls['barrier_gates'];
+    control.push(this.buildBarrier_gate());
+  }
+
+  removeBarrier_gate(i: number) {
+    const control = <FormArray>this.form.controls['barrier_gates'];
+    control.removeAt(i);
+  }
 }
