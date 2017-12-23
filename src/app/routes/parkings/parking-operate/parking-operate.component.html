@@ -32,7 +32,7 @@
             </div>
             <div nz-col [nzSm]="20">
               <nz-card formArrayName="barrier_gates" class="barrier_gates">
-                <div nz-row class="barrier_gates_row" *ngFor="let barrier_gate of form.controls.barrier_gates.controls; let i=index">
+                <div nz-row class="barrier_gates_row" *ngFor="let barrier_gate of barrier_gates.controls; let i=index">
                   <div nz-col [nzSpan]="7" [formGroupName]="i">
                     <div nz-form-item nz-row>
                       <div nz-form-label nz-col [nzSpan]="5">
@@ -41,7 +41,7 @@
                       <div nz-form-control nz-col [nzSpan]="19">
                         <nz-input formControlName="Bid" [nzPlaceHolder]="'道闸编号'" [nzId]="'Bid'">
                         </nz-input>
-                        <div nz-form-explain *ngIf="(form.controls.barrier_gates.controls[i].controls.Bid.dirty || form.controls.barrier_gates.controls[i].controls.Bid.touched) && form.controls.barrier_gates.controls[i].controls.Bid.errors?.required">请填写道闸编号!</div>
+                        <div nz-form-explain *ngIf="(barrier_gates.controls[i].controls.Bid.dirty || barrier_gates.controls[i].controls.Bid.touched) && barrier_gates.controls[i].controls.Bid.errors?.required">请填写道闸编号!</div>
                       </div>
                     </div>
                   </div>
@@ -53,7 +53,7 @@
                       <div nz-form-control nz-col [nzSpan]="19">
                         <nz-input formControlName="Bname" [nzPlaceHolder]="'道闸名称'" [nzId]="'Bname'">
                         </nz-input>
-                        <div nz-form-explain *ngIf="(form.controls.barrier_gates.controls[i].controls.Bname.dirty || form.controls.barrier_gates.controls[i].controls.Bname.touched) && form.controls.barrier_gates.controls[i].controls.Bname.errors?.required">请填写道闸名称!</div>
+                        <div nz-form-explain *ngIf="(barrier_gates.controls[i].controls.Bname.dirty || barrier_gates.controls[i].controls.Bname.touched) && barrier_gates.controls[i].controls.Bname.errors?.required">请填写道闸名称!</div>
                       </div>
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                   <div nz-col [nzSpan]="3" class="barrier_gates_button">
-                    <button type="button" nz-button [nzType]="'danger'" [nzSize]="'small'" [nzShape]="'circle'" *ngIf="form.controls.barrier_gates.controls.length > 1"
+                    <button type="button" nz-button [nzType]="'danger'" [nzSize]="'small'" [nzShape]="'circle'" *ngIf="barrier_gates.controls.length > 1"
                       (click)="removeBarrier_gate(i)">
                       <i class="anticon anticon-close"></i>
                     </button>

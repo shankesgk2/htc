@@ -45,7 +45,7 @@ export class ParkingOperateComponent implements OnInit {
     }
   }
   get name() { return this.form.controls.name; }
-  get barrier_gate() { return this.form.controls.barrier_gate; }
+  get barrier_gates() { return this.form.controls.barrier_gates; }
   ngOnInit() {
     this.form = this.fb.group({
       name: [null, [Validators.required]],
