@@ -7,6 +7,8 @@ import { AngularWebStorageModule } from 'angular-web-storage';
 import { NgZorroAntdExtraModule } from 'ng-zorro-antd-extra';
 import { CountdownModule } from 'ngx-countdown';
 
+import { NgxAmapModule } from 'ngx-amap';
+
 import { DownFileDirective } from './directives/down-file.directive';
 import { ImageDirective } from './directives/image.directive';
 import { FixedBtnsDirective } from './directives/fixed-btns.directive';
@@ -75,7 +77,7 @@ import {
     NzAvatarModule,
     // SERVICES
     NzNotificationService,
-    NzMessageService
+    NzMessageService,
 } from 'ng-zorro-antd';
 
 const ZORROMODULES = [
@@ -139,7 +141,8 @@ const ZORROMODULES = [
         NgZorroAntdExtraModule.forRoot(),
         // 第三方
         CountdownModule,
-        AngularWebStorageModule
+        AngularWebStorageModule,
+        NgxAmapModule
     ],
     declarations: [...shared_components, ...DIRECTIVES, ...PIPES],
     providers: [ ...HELPERS ],
@@ -157,7 +160,8 @@ const ZORROMODULES = [
         // 业务级
         ...shared_components,
         ...DIRECTIVES,
-        ...PIPES
+        ...PIPES,
+        NgxAmapModule
     ]
 })
 export class SharedModule {

@@ -49,6 +49,9 @@ export class ParkingOperateComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       name: [null, [Validators.required]],
+      principal: null,
+      contact_information: null,
+      location: null,
       barrier_gates: this.fb.array([
         this.buildBarrier_gate()
       ])

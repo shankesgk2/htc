@@ -90,6 +90,53 @@
               </nz-card>
             </div>
           </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="4">
+              <label for="principal">
+                <span>负责人</span>
+              </label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="principal">
+              <nz-input formControlName="principal" [nzId]="'principal'">
+                <ng-template #addOnBefore>
+                  <i class="anticon anticon-user"></i>
+                </ng-template>
+              </nz-input>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="4">
+              <label for="contact_information">
+                <span>负责人联系方式</span>
+              </label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="contact_information">
+              <nz-input formControlName="contact_information" [nzId]="'contact_information'">
+                <ng-template #addOnBefore>
+                  <i class="anticon anticon-contacts"></i>
+                </ng-template>
+              </nz-input>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="4">
+              <label for="location" nz-form-item-required>
+                <span>停车场位置</span>
+              </label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="location">
+              <nz-input formControlName="location" [nzId]="'location'" [nzDisabled]="'true'">
+                <ng-template #addOnBefore>
+                  <i class="anticon anticon-environment"></i>
+                </ng-template>
+              </nz-input>
+              <div nz-row>
+                <ngx-amap [scrollWheel]="false" class="demo-map" style="height:400px;">
+                  <amap-tool-bar></amap-tool-bar>
+                </ngx-amap>
+              </div>
+            </div>
+          </div>
         </fieldset>
         <div nz-form-item nz-row class="mb0">
           <div nz-form-control nz-col [nzSpan]="20" [nzOffset]="4">

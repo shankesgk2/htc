@@ -6,6 +6,7 @@ import { LocalStorageService } from 'angular-web-storage';
 import { JwtModule } from '@auth0/angular-jwt';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { NgxAmapModule } from 'ngx-amap';
 import { AppComponent } from './app.component';
 import { RoutesModule } from './routes/routes.module';
 import { LayoutModule } from './layout/layout.module';
@@ -36,19 +37,22 @@ export function tokenGetter() {
         CoreModule,
         LayoutModule,
         RoutesModule,
+        NgxAmapModule.forRoot({
+            apiKey: '6a5898abc9aab7b54b4f3abe97b470c6'
+        }),
         JwtModule.forRoot({
             config: {
-              tokenGetter: tokenGetter,
-              // whitelistedDomains: ['localhost:4200', 'ds.com', 'www.ds.com'],
-              headerName: 'Authorization',
-              authScheme: 'Bearer ',
-              throwNoTokenError: false,
-              skipWhenExpired: true
+                tokenGetter: tokenGetter,
+                // whitelistedDomains: ['localhost:4200', 'ds.com', 'www.ds.com'],
+                headerName: 'Authorization',
+                authScheme: 'Bearer ',
+                throwNoTokenError: false,
+                skipWhenExpired: true
             }
-          })
+        })
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         StartupService,
         {
             provide: APP_INITIALIZER,
@@ -59,8 +63,9 @@ export function tokenGetter() {
         AuthGuard
     ],
     exports: [
-        JwtModule
+        JwtModule,
+        NgxAmapModule
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
