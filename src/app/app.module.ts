@@ -38,7 +38,7 @@ export function tokenGetter() {
         LayoutModule,
         RoutesModule,
         NgxAmapModule.forRoot({
-            apiKey: '6a5898abc9aab7b54b4f3abe97b470c6'
+            apiKey: 'e7f4eb69b9780593699244a0c792e6f8'
         }),
         JwtModule.forRoot({
             config: {
