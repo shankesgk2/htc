@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
-  styleUrls: ['./permissions.compinent.less']
+  styles: []
 })
 export class PermissionsComponent implements OnInit {
 
