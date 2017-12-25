@@ -9,6 +9,7 @@ areas.forEach((area) => {
     matchCity.children.push({
       label: area.name,
       value: area.code,
+      isLeaf: true
     });
   }
 });
@@ -20,15 +21,17 @@ cities.forEach((city) => {
     matchProvince.children.push({
       label: city.name,
       value: city.code,
+      isLeaf: true,
       children: city.children,
     });
   }
 });
 
-const options = provinces.map(province => ({
+const china_division = provinces.map(province => ({
   label: province.name,
   value: province.code,
+  isLeaf: true,
   children: province.children,
 }));
 
-export default options;
+export default china_division;

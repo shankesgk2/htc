@@ -130,7 +130,16 @@
                   <i class="anticon anticon-environment"></i>
                 </ng-template>
               </nz-input>
-              <div nz-row>
+              <div nz-row class="">
+                  <nz-cascader
+                  [nzPlaceHolder]="'请选择搜索地区'"
+                  [nzChangeOnSelect]="'true'"
+                  [nzOptions]="_options"
+                  [(ngModel)]="_value"
+                  (ngModelChange)="_console($event)"
+                  (nzChange)="_console($event)"
+                  [formControlName]="'china_division'">
+                </nz-cascader>
                 <ngx-amap [scrollWheel]="false" class="demo-map" style="height:400px;">
                   <amap-tool-bar></amap-tool-bar>
                 </ngx-amap>

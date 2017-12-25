@@ -7,6 +7,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { TitleService } from '@core/services/title.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
+import options from '@shared/helper/cascader-address-options';
+
 @Component({
   selector: 'app-park-operate',
   templateUrl: './parking-operate.component.html',
@@ -20,6 +22,8 @@ export class ParkingOperateComponent implements OnInit {
   public _loading = false;
   private _loadingId;
   public park: any;
+  public _options = options;
+  public _value: any[] = null;
   constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService) { }
 
   submitForm() {
@@ -47,11 +51,13 @@ export class ParkingOperateComponent implements OnInit {
   get name() { return this.form.controls.name; }
   get barrier_gates() { return this.form.controls.barrier_gates; }
   ngOnInit() {
+    console.log(options);
     this.form = this.fb.group({
       name: [null, [Validators.required]],
       principal: null,
       contact_information: null,
       location: null,
+      china_division: null,
       barrier_gates: this.fb.array([
         this.buildBarrier_gate()
       ])
@@ -86,5 +92,8 @@ export class ParkingOperateComponent implements OnInit {
   removeBarrier_gate(i: number) {
     const control = <FormArray>this.form.controls['barrier_gates'];
     control.removeAt(i);
+  }
+  _console(value) {
+    console.log(value);
   }
 }

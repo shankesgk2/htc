@@ -3,7 +3,10 @@ declare var module: NodeModule;
 interface NodeModule {
   id: string;
 }
-
+declare module "*.json" {
+  const value: any;
+  export default value;
+}
 interface WebpackRequire {
   <T>(path: string): T;
   (paths: string[], callback: (...modules: any[]) => void): void;
