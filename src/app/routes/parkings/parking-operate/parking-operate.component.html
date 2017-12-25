@@ -124,26 +124,35 @@
                 <span>停车场位置</span>
               </label>
             </div>
-            <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="location">
+            <div nz-form-control nz-col [nzSm]="20">
               <nz-input formControlName="location" [nzId]="'location'" [nzDisabled]="'true'">
                 <ng-template #addOnBefore>
                   <i class="anticon anticon-environment"></i>
                 </ng-template>
               </nz-input>
-              <div nz-row class="">
-                  <nz-cascader
-                  [nzPlaceHolder]="'请选择搜索地区'"
-                  [nzChangeOnSelect]="'true'"
-                  [nzOptions]="_options"
-                  [(ngModel)]="_value"
-                  (ngModelChange)="_console($event)"
-                  (nzChange)="_console($event)"
-                  [formControlName]="'china_division'">
-                </nz-cascader>
-                <ngx-amap [scrollWheel]="false" class="demo-map" style="height:400px;">
-                  <amap-tool-bar></amap-tool-bar>
-                </ngx-amap>
-              </div>
+              <nz-card>
+                <div nz-row [nzGutter]="6" class="china_division">
+                  <div nz-col [nzSm]=8>
+                    <nz-cascader [nzPlaceHolder]="'请选择搜索地区'" [nzChangeOnSelect]="'true'" [nzOptions]="china_division" [(ngModel)]="search_division"
+                      (nzSelectionChange)="_set_selected_area($event)" [formControlName]="'china_division'">
+                    </nz-cascader>
+                  </div>
+                  <div nz-col [nzSm]="10">
+                    <nz-input [(ngModel)]="search_area" name="search_area" [nzPlaceHolder]="'请搜索详细地址（可选）'" [formControlName]="'search_area'"></nz-input>
+                  </div>
+                  <div nz-col [nzSm]="6">
+                    <button type="button" nz-button [nzType]="'primary'" (click)="search_map()">
+                      <i class="anticon anticon-search"></i>
+                      <span>搜索</span>
+                    </button>
+                  </div>
+                </div>
+                <div nz-row>
+                  <ngx-amap [scrollWheel]="false" class="demo-map" style="height:400px;">
+                    <amap-tool-bar></amap-tool-bar>
+                  </ngx-amap>
+                </div>
+              </nz-card>
             </div>
           </div>
         </fieldset>
