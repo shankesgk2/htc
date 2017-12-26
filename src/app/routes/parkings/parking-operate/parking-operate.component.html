@@ -125,7 +125,7 @@
               </label>
             </div>
             <div nz-form-control nz-col [nzSm]="20">
-              <nz-input formControlName="location" [nzId]="'location'" [nzDisabled]="'true'">
+              <nz-input formControlName="location" [(ngModel)]="location" [nzId]="'location'" [nzDisabled]="'true'">
                 <ng-template #addOnBefore>
                   <i class="anticon anticon-environment"></i>
                 </ng-template>
@@ -141,15 +141,20 @@
                     <nz-input [(ngModel)]="search_area" name="search_area" [nzPlaceHolder]="'请搜索详细地址（可选）'" [formControlName]="'search_area'"></nz-input>
                   </div>
                   <div nz-col [nzSm]="6">
-                    <button type="button" nz-button [nzType]="'primary'" (click)="search_map()">
+                    <button type="button" nz-button [nzType]="'primary'" (click)="search_map(true)">
                       <i class="anticon anticon-search"></i>
                       <span>搜索</span>
                     </button>
                   </div>
                 </div>
                 <div nz-row>
-                  <ngx-amap [scrollWheel]="false" class="demo-map" style="height:400px;">
+                  <ngx-amap [scrollWheel]="false" class="demo-map" [resizeEnable]="true" [center]="point" [zoom]="15" (mapClick)="onMapClick($event)" style="height:400px;">
                     <amap-tool-bar></amap-tool-bar>
+                    <amap-marker [position]="point">
+                        <amap-info-window [offset]="{x: 0, y: -30}" [isOpen]="true">
+                          {{locationInfo}}
+                        </amap-info-window>
+                      </amap-marker>
                   </ngx-amap>
                 </div>
               </nz-card>

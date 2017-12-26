@@ -7,6 +7,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { TitleService } from '@core/services/title.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
+import { AmapGeocoderService, AmapGeocoderWrapper } from 'ngx-amap';
+
 import china_division from '@shared/helper/cascader-address-options';
 
 @Component({
@@ -23,10 +25,25 @@ export class ParkingOperateComponent implements OnInit {
   private _loadingId;
   public park: any;
   public china_division = china_division;
-  public search_division: any[] = null;
-  public search_area: any;
+  public search_division: any[] = [{
+    value: '37',
+    label: '山东省'
+  }, {
+    value: '3715',
+    label: '聊城市'
+  }, {
+    value: '371502',
+    label: '东昌府区'
+  }];
+  public search_area: any = '';
   private selected_area: object;
-  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService) { }
+  public point: any;
+  public locationInfo: string;
+  private plugin: Promise<AmapGeocoderWrapper>;
+  public location: string;
+  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService, private AmapGeocoder: AmapGeocoderService) {
+    this.plugin = AmapGeocoder.of();
+  }
 
   submitForm() {
     this._loading = true;
@@ -57,7 +74,7 @@ export class ParkingOperateComponent implements OnInit {
       name: [null, [Validators.required]],
       principal: null,
       contact_information: null,
-      location: null,
+      location: [null, Validators.required],
       china_division: null,
       search_area: null,
       barrier_gates: this.fb.array([
@@ -96,16 +113,54 @@ export class ParkingOperateComponent implements OnInit {
     control.removeAt(i);
   }
 
-  search_map() {
+  search_map(withKeyword = false) {
     let search_keyword = '';
     for (const area in this.selected_area) {
       search_keyword += this.selected_area[area].label;
     }
-    search_keyword += this.search_area;
-    console.log(search_keyword);
+    if (withKeyword) {
+      search_keyword += this.search_area || '';
+    }
+    if (search_keyword) {
+      this.plugin.then(geocoder => geocoder.getLocation(search_keyword))
+        .then(data => {
+          console.log('get location of address:', search_keyword);
+          console.log('status:', data.status);
+          console.log('result:', data.result);
+
+          if (data.status === 'complete' && data.result.info === 'OK') {
+            this.point = data.result.geocodes[0].location;
+            this.locationInfo = data.result.geocodes[0].formattedAddress;
+          }
+        });
+    }
+  }
+
+  onMapClick(e) {
+    this.point = e.lnglat;
+    this.locationInfo = `经纬度： ${this.point.getLng()}, ${this.point.getLat()}`;
+
+    if (this.point) {
+      // 使用AMap.Geocoder.getAddress方法逆向地理编码:
+      this.plugin.then(geocoder => geocoder.getAddress(this.point))
+        .then(data => {
+          console.log('get address of position:', this.point);
+          console.log('status:', data.status);
+          console.log('result:', data.result);
+
+          if (data.status === 'complete' && data.result.info === 'OK') {
+            this.location = data.result.regeocode.formattedAddress;
+          }
+        });
+    }
   }
 
   _set_selected_area(value) {
     this.selected_area = value;
+    if (value.length > 1) {
+      this.search_map(true);
+    } else {
+      this.search_map();
+    }
   }
 }
