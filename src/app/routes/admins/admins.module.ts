@@ -28,10 +28,10 @@ import { TreeModule } from 'angular-tree-component';
     OperateComponent,
     RolesComponent,
     PermissionsComponent
-],
+  ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
   ]
 })
 export class AdminsModule { }

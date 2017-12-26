@@ -33,15 +33,15 @@
             <div nz-col [nzSm]="20">
               <nz-card formArrayName="barrier_gates" class="barrier_gates">
                 <div nz-row class="barrier_gates_row" *ngFor="let barrier_gate of barrier_gates.controls; let i=index">
-                  <div nz-col [nzSpan]="7" [formGroupName]="i">
+                  <div nz-col [nzSpan]="4" [formGroupName]="i">
                     <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="5">
+                      <div nz-form-label nz-col [nzSpan]="12">
                         <label for="Bid" nz-form-item-required>编号</label>
                       </div>
-                      <div nz-form-control nz-col [nzSpan]="19">
+                      <div nz-form-control nz-col [nzSpan]="12">
                         <nz-input formControlName="Bid" [nzPlaceHolder]="'道闸编号'" [nzId]="'Bid'">
                         </nz-input>
-                        <div nz-form-explain *ngIf="(barrier_gates.controls[i].controls.Bid.dirty || barrier_gates.controls[i].controls.Bid.touched) && barrier_gates.controls[i].controls.Bid.errors?.required">请填写道闸编号!</div>
+                        <div nz-form-explain *ngIf="(barrier_gates.controls[i].controls.Bid.dirty || barrier_gates.controls[i].controls.Bid.touched) && barrier_gates.controls[i].controls.Bid.errors?.required">必填!</div>
                       </div>
                     </div>
                   </div>
@@ -57,6 +57,20 @@
                       </div>
                     </div>
                   </div>
+                  <div nz-col [nzSpan]="4" [formGroupName]="i">
+                    <div nz-form-item nz-row>
+                      <div nz-form-control nz-col [nzOffset]="5" [nzSm]="19">
+                        <nz-radio-group formControlName="Btype">
+                          <label nz-radio-button [nzValue]="'1'">
+                            <span>进</span>
+                          </label>
+                          <label nz-radio-button [nzValue]="'0'">
+                            <span>出</span>
+                          </label>
+                        </nz-radio-group>
+                      </div>
+                    </div>
+                  </div>
                   <div nz-col [nzSpan]="7" [formGroupName]="i">
                     <div nz-form-item nz-row>
                       <div nz-form-label nz-col [nzSpan]="5">
@@ -68,7 +82,7 @@
                       </div>
                     </div>
                   </div>
-                  <div nz-col [nzSpan]="3" class="barrier_gates_button">
+                  <div nz-col [nzSpan]="2" class="barrier_gates_button">
                     <button type="button" nz-button [nzType]="'danger'" [nzSize]="'small'" [nzShape]="'circle'" *ngIf="barrier_gates.controls.length > 1"
                       (click)="removeBarrier_gate(i)">
                       <i class="anticon anticon-close"></i>
@@ -88,6 +102,16 @@
                   </div>
                 </div>
               </nz-card>
+            </div>
+          </div>
+          <div nz-form-item nz-row>
+            <div nz-form-label nz-col [nzSm]="4">
+              <label for="parking_spaces">
+                <span>车位数</span>
+              </label>
+            </div>
+            <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="parking_spaces">
+              <nz-input-number formControlName="parking_spaces" [nzMin]="1" [nzStep]="1"></nz-input-number>
             </div>
           </div>
           <div nz-form-item nz-row>
@@ -124,14 +148,14 @@
                 <span>停车场位置</span>
               </label>
             </div>
-            <div nz-form-control nz-col [nzSm]="20">
-              <nz-input formControlName="location" [(ngModel)]="location" [nzId]="'location'" [nzDisabled]="'true'">
+            <div nz-form-control nz-col [nzSm]="20" class="border-bottom-radius-none">
+              <nz-input formControlName="location" [(ngModel)]="location" [nzId]="'location'" [nzReadonly]="'true'">
                 <ng-template #addOnBefore>
                   <i class="anticon anticon-environment"></i>
                 </ng-template>
               </nz-input>
-              <nz-card>
-                <div nz-row [nzGutter]="6" class="china_division">
+              <nz-card class="map-card border-top-radius-none">
+                <div nz-row [nzGutter]="16" class="map-card-search">
                   <div nz-col [nzSm]=8>
                     <nz-cascader [nzPlaceHolder]="'请选择搜索地区'" [nzChangeOnSelect]="'true'" [nzOptions]="china_division" [(ngModel)]="search_division"
                       (nzSelectionChange)="_set_selected_area($event)" [formControlName]="'china_division'">
@@ -148,13 +172,14 @@
                   </div>
                 </div>
                 <div nz-row>
-                  <ngx-amap [scrollWheel]="false" class="demo-map" [resizeEnable]="true" [center]="point" [zoom]="15" (mapClick)="onMapClick($event)" style="height:400px;">
+                  <ngx-amap [scrollWheel]="false" class="demo-map" [resizeEnable]="true" [center]="point" [zoom]="15" (mapClick)="onMapClick($event)"
+                    style="height:400px;">
                     <amap-tool-bar></amap-tool-bar>
                     <amap-marker [position]="point">
-                        <amap-info-window [offset]="{x: 0, y: -30}" [isOpen]="true">
-                          {{locationInfo}}
-                        </amap-info-window>
-                      </amap-marker>
+                      <amap-info-window [offset]="{x: 0, y: -30}" [isOpen]="true">
+                        {{locationInfo}}
+                      </amap-info-window>
+                    </amap-marker>
                   </ngx-amap>
                 </div>
               </nz-card>

@@ -12,7 +12,6 @@ import { TitleService } from '@core/services/title.service';
   selector: 'app-operate',
   templateUrl: './operate.component.html',
   providers: [UsersService, NzMessageService],
-  styleUrls: ['./operate.component.less']
 })
 export class OperateComponent implements OnInit {
   public form: FormGroup;

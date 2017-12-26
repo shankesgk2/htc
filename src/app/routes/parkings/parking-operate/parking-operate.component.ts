@@ -49,8 +49,13 @@ export class ParkingOperateComponent implements OnInit {
     this._loading = true;
     this._loadingId = this.msg.loading('提交中...', { nzDuration: 0 }).messageId;
     if (this.form.valid) {
+      const data = this.form.value;
+      delete data.china_division;
+      delete data.search_area;
+      data.longitude = this.point.getLng();
+      data.latitude = this.point.getLat();
       return new Promise((resolve, reject) => {
-        const a = this.http.post_patch('parking', this.id, this.form.value, { observe: 'response' })
+        const a = this.http.post_patch('parking', this.id, data, { observe: 'response' })
           .subscribe((resp: HttpResponse<any>) => {
             this.msg.remove(this._loadingId);
             if (resp.status === 201) {
@@ -77,6 +82,7 @@ export class ParkingOperateComponent implements OnInit {
       location: [null, Validators.required],
       china_division: null,
       search_area: null,
+      parking_spaces: ['1', Validators.required],
       barrier_gates: this.fb.array([
         this.buildBarrier_gate()
       ])
@@ -99,6 +105,7 @@ export class ParkingOperateComponent implements OnInit {
     return this.fb.group({
       Bid: [null, Validators.required],
       Bname: [val, Validators.required],
+      Btype: ['1', Validators.required],
       Bdescription: ''
     });
   }
@@ -124,10 +131,6 @@ export class ParkingOperateComponent implements OnInit {
     if (search_keyword) {
       this.plugin.then(geocoder => geocoder.getLocation(search_keyword))
         .then(data => {
-          console.log('get location of address:', search_keyword);
-          console.log('status:', data.status);
-          console.log('result:', data.result);
-
           if (data.status === 'complete' && data.result.info === 'OK') {
             this.point = data.result.geocodes[0].location;
             this.locationInfo = data.result.geocodes[0].formattedAddress;
@@ -138,18 +141,12 @@ export class ParkingOperateComponent implements OnInit {
 
   onMapClick(e) {
     this.point = e.lnglat;
-    this.locationInfo = `经纬度： ${this.point.getLng()}, ${this.point.getLat()}`;
-
     if (this.point) {
-      // 使用AMap.Geocoder.getAddress方法逆向地理编码:
       this.plugin.then(geocoder => geocoder.getAddress(this.point))
         .then(data => {
-          console.log('get address of position:', this.point);
-          console.log('status:', data.status);
-          console.log('result:', data.result);
-
           if (data.status === 'complete' && data.result.info === 'OK') {
             this.location = data.result.regeocode.formattedAddress;
+            this.locationInfo = this.location;
           }
         });
     }
