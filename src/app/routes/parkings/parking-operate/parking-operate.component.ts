@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { ParkingsService } from 'app/routes/parkings/parkings.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { _HttpClient } from '@core/services/http.client';
 import { NzMessageService } from 'ng-zorro-antd';
 import { TitleService } from '@core/services/title.service';
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-
 import { AmapGeocoderService, AmapGeocoderWrapper } from 'ngx-amap';
-
 import china_division from '@shared/helper/cascader-address-options';
 
 @Component({
@@ -41,7 +39,7 @@ export class ParkingOperateComponent implements OnInit {
   public locationInfo: string;
   private plugin: Promise<AmapGeocoderWrapper>;
   public location: string;
-  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService, private AmapGeocoder: AmapGeocoderService) {
+  constructor(private routeInfo: ActivatedRoute, private http: _HttpClient, private parksSvc: ParkingsService, private fb: FormBuilder, private msg: NzMessageService, private titleSvc: TitleService, private AmapGeocoder: AmapGeocoderService, public router: Router) {
     this.plugin = AmapGeocoder.of();
   }
 
@@ -52,14 +50,20 @@ export class ParkingOperateComponent implements OnInit {
       const data = this.form.value;
       delete data.china_division;
       delete data.search_area;
-      data.longitude = this.point.getLng();
-      data.latitude = this.point.getLat();
+      if (Array.isArray(this.point)) {
+        data.longitude = this.point[0];
+        data.latitude = this.point[1];
+      } else {
+        data.longitude = this.point.getLng();
+        data.latitude = this.point.getLat();
+      }
       return new Promise((resolve, reject) => {
         const a = this.http.post_patch('parking', this.id, data, { observe: 'response' })
           .subscribe((resp: HttpResponse<any>) => {
             this.msg.remove(this._loadingId);
             if (resp.status === 201) {
               this.msg.success(this.actionName + '成功');
+              this.router.navigate(['/parks']);
             }
             resolve(resp);
             return true;
@@ -74,39 +78,72 @@ export class ParkingOperateComponent implements OnInit {
   }
   get name() { return this.form.controls.name; }
   get barrier_gates() { return this.form.controls.barrier_gates; }
+  get principal() { return this.form.controls.principal; }
+  get contact_information() { return this.form.controls.contact_information; }
+  get location_form() { return this.form.controls.location; }
+  get charges() { return this.form.controls.charges; }
+  get free_time() { return this.form.controls.free_time; }
+  get parking_spaces() { return this.form.controls.parking_spaces; }
   ngOnInit() {
+    let barrier_gates_form = [];
+    barrier_gates_form = [this.buildBarrier_gate()];
     this.form = this.fb.group({
       name: [null, [Validators.required]],
       principal: null,
       contact_information: null,
       location: [null, Validators.required],
+      charges: ['2.00', Validators.required],
+      free_time: ['0', Validators.required],
       china_division: null,
       search_area: null,
       parking_spaces: ['1', Validators.required],
-      barrier_gates: this.fb.array([
-        this.buildBarrier_gate()
-      ])
+      barrier_gates: this.fb.array(barrier_gates_form)
     });
     this.id = this.routeInfo.snapshot.queryParams['id'];
     if (this.id) {
+      this._loadingId = this.msg.loading('读取数据中...', { nzDuration: 0 }).messageId;
       this.actionName = '修改停车场';
       this.actionBtn = '修改';
+      this.titleSvc.setTitle(this.actionName);
+      const barrier_gates_field = <FormArray>this.form.controls['barrier_gates'];
+      barrier_gates_field.removeAt(0);
       this.park = this.parksSvc.getPark(this.id).subscribe((data: any) => {
         this.form.patchValue({
           'name': data.name,
-          'barrier_gate': data.barrier_gate
+          'parking_spaces': data.parking_spaces,
+          'charges': data.charges,
+          'free_time': data.free_time,
+          'location': data.location,
+          'principal': data.principal,
+          'contact_information': data.contact_information
         });
+        for (const key in data.barrier_gates) {
+          barrier_gates_field.push(this.buildBarrier_gate({
+            'id': data.barrier_gates[key]['id'],
+            'Bid': data.barrier_gates[key]['bid'],
+            'Bname': data.barrier_gates[key]['bname'],
+            'Btype': data.barrier_gates[key]['btype'],
+            'Bdescription': data.barrier_gates[key]['bdescription']
+          }));
+        }
+        this.point = [data.longitude, data.latitude];
+        this.locationInfo = data.location;
+        this.msg.remove(this._loadingId);
+      }, (error: HttpErrorResponse) => {
+        this._loading = true;
+        this.actionBtn = '数据加载出错';
+        this.msg.remove(this._loadingId);
       });
     }
-    this.titleSvc.setTitle(this.actionName);
   }
 
-  buildBarrier_gate(val: string = null) {
+  buildBarrier_gate(val: any = []) {
     return this.fb.group({
-      Bid: [null, Validators.required],
-      Bname: [val, Validators.required],
-      Btype: ['1', Validators.required],
-      Bdescription: ''
+      id: val.id ? val.id : '0',
+      Bid: [val.Bid, Validators.required],
+      Bname: [val.Bname, Validators.required],
+      Btype: [val.Btype !== undefined ? String(val.Btype) : '1', Validators.required],
+      Bdescription: val.Bdescription
     });
   }
 

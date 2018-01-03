@@ -18,5 +18,9 @@ export class ParkingsService {
     getPark(id = 0) {
         return this.http.get('parking/' + id);
     }
+
+    deleteParking(id) {
+        return this.http.delete('parking/' + id);
+    }
     constructor(private http: _HttpClient) { }
 }

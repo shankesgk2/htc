@@ -21,6 +21,18 @@
           <span>道闸</span>
         </th>
         <th nz-th>
+          <span>车位数</span>
+        </th>
+        <th nz-th>
+          <span>收费标准</span>
+        </th>
+        <th nz-th>
+          <span>负责人</span>
+        </th>
+        <th nz-th>
+          <span>联系方式</span>
+        </th>
+        <th nz-th>
           <span>位置</span>
         </th>
         <th nz-th>
@@ -30,22 +42,34 @@
           <span>更新时间</span>
         </th>
         <th nz-th>
-            <span>操作</span>
-          </th>
+          <span>操作</span>
+        </th>
       </tr>
     </thead>
     <tbody nz-tbody>
       <tr nz-tbody-tr *ngFor="let data of nzTable.data">
         <td nz-td>{{data.id}}</td>
         <td nz-td>{{data.name}}</td>
-        <td nz-td>{{data.name}}</td>
-        <td nz-td>{{data.email}}</td>
+        <td nz-td>
+          <nz-tooltip *ngFor="let b of data.barrier_gates">
+            <nz-tag nz-tooltip [nzColor]="'#108ee9'">{{b.btype ? '入口' : '出口'}}</nz-tag>
+            <ng-template #nzTemplate>
+              <p>道闸名称：{{b.bname}}</p>
+              <p>道闸编号：{{b.bid}}</p>
+            </ng-template>
+          </nz-tooltip>
+        </td>
+        <td nz-td>{{data.parking_spaces}}</td>
+        <td nz-td>{{data.charges}}元/时</td>
+        <td nz-td>{{data.principal}}</td>
+        <td nz-td>{{data.contact_information}}</td>
+        <td nz-td>{{data.location}}</td>
         <td nz-td>{{data.created_at}}</td>
         <td nz-td>{{data.updated_at}}</td>
         <td nz-td>
           <a [routerLink]="['operate']" [queryParams]="{ id: data.id }">修改</a>
           <span nz-table-divider></span>
-          <nz-popconfirm [nzTitle]="'确定要删除吗？'" [nzOkText]="'是'" [nzCancelText]="'取消'" (nzOnConfirm)="deleteAdmin()">
+          <nz-popconfirm [nzTitle]="'确定要删除吗？'" [nzOkText]="'是'" [nzCancelText]="'取消'" (nzOnConfirm)="deleteParking(data.id)">
             <a nz-popconfirm>删除</a>
           </nz-popconfirm>
         </td>

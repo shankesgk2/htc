@@ -12,6 +12,7 @@ import { JwtInterceptor } from '@auth0/angular-jwt';
 import { RolesComponent } from 'app/routes/admins/roles/roles.component';
 import { PermissionsComponent } from './permissions/permissions.component';
 import { TreeModule } from 'angular-tree-component';
+import { PermissionsOperateComponent } from 'app/routes/admins/permissions/permissions-operate/permissions-operate.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { TreeModule } from 'angular-tree-component';
     UsersComponent,
     OperateComponent,
     RolesComponent,
-    PermissionsComponent
+    PermissionsComponent,
+    PermissionsOperateComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
