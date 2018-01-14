@@ -7,7 +7,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "/Volumes/work/php/htc/public/admin",
       "assets": [
         "assets",
         "favicon.ico"

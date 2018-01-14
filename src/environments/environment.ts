@@ -4,7 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-    SERVER_URL: `http://api.htc.com/admin/`,
+    SERVER_URL: `http://www.htc.com/api/admin/`,
     INIT_JSON: 'http://localhost:4200/assets/app-data.json',
     debug: true,
     production: false,

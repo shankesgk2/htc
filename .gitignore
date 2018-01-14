@@ -42,3 +42,6 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
+.angular-cli.json
+.angular-cli.json
+.angular-cli.json
