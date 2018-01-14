@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ParkingsComponent } from './parkings/parkings.component';
 import { ParkingOperateComponent } from 'app/routes/parkings/parking-operate/parking-operate.component';
 import { ParkingSpacesComponent } from 'app/routes/parkings/parking-spaces/parking-spaces.component';
+import { ParkingSpaceOperateComponent } from 'app/routes/parkings/parking-spaces/parking-space-operate/parking-space-operate.component';
 
 @NgModule({
     imports: [
@@ -19,13 +20,15 @@ import { ParkingSpacesComponent } from 'app/routes/parkings/parking-spaces/parki
         DashboardComponent,
         ParkingsComponent,
         ParkingOperateComponent,
-        ParkingSpacesComponent
+        ParkingSpacesComponent,
+        ParkingSpaceOperateComponent
     ],
     exports: [
         RouterModule
     ],
     entryComponents: [
-        ParkingSpacesComponent
+        ParkingSpacesComponent,
+        ParkingSpaceOperateComponent
     ]
 })
 

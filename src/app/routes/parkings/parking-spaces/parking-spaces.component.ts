@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NzModalSubject, NzModalService } from 'ng-zorro-antd';
 import { ParkingsService } from 'app/routes/parkings/parkings.service';
+import { ParkingSpaceOperateComponent } from 'app/routes/parkings/parking-spaces/parking-space-operate/parking-space-operate.component';
 
 @Component({
   selector: 'app-parking-spaces',
@@ -20,6 +21,7 @@ export class ParkingSpacesComponent implements OnInit {
   _total = 1;
   _dataSet = [];
   _loading = true;
+  addModel: any;
   @Input()
 
   reset() {
@@ -38,6 +40,20 @@ export class ParkingSpacesComponent implements OnInit {
     });
   }
 
+  addParkingSpace(e) {
+    const _title = '添加停车位（' + this.pname + '）';
+    this.addModel = this.modalService.open({
+      title: _title,
+      content: ParkingSpaceOperateComponent,
+      footer: false,
+      maskClosable: false,
+      width: 600,
+      zIndex: 1100,
+      componentParams: {
+        id: this.id
+      }
+    });
+  }
   closeParkingSpaceModel(e) {
     this.subject.destroy();
   }
