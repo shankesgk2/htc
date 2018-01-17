@@ -1,11 +1,147 @@
-<p>
-    parking-space-operate works!
-</p>
-<div class="customize-footer">
-    <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="submitParkingSpace($event)">
-    <span>{{actionName}}</span>
-  </button>
-    <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="closeParkingSpaceOperateModel($event)">
-    <span>关 闭</span>
-  </button>
+<form nz-form [formGroup]="form" (ngSubmit)="submitParkingSpaceForm()" *ngIf="!id">
+    <div formArrayName="parking_spaces" class="parking_spaces">
+        <div nz-row class="parking_spaces_row" *ngFor="let parking_space of parking_spaces['controls']; let i=index">
+          <div nz-col [nzSpan]="5" [formGroupName]="i">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="10">
+                <label for="rid" nz-form-item-required>车位编号</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="14">
+                <nz-input formControlName="rid" [nzPlaceHolder]="'车位编号'" [nzId]="'rid'">
+                </nz-input>
+                <div nz-form-explain *ngIf="(parking_spaces.controls[i].controls.rid.dirty || parking_spaces.controls[i].controls.rid.touched) && parking_spaces.controls[i].controls.rid.errors?.required">必填!</div>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="5" [formGroupName]="i">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="10">
+                <label for="parking_lock" nz-form-item-required>地锁编号</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="14">
+                <nz-input formControlName="parking_lock" [nzPlaceHolder]="'地锁编号'" [nzId]="'parking_lock'">
+                </nz-input>
+                <div nz-form-explain *ngIf="(parking_spaces.controls[i].controls.parking_lock.dirty || parking_spaces.controls[i].controls.parking_lock.touched) && parking_spaces.controls[i].controls.parking_lock.errors?.required">请填写地锁编号!</div>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="5" [formGroupName]="i">
+            <div nz-form-item nz-row>
+              <div nz-form-control nz-col [nzOffset]="5" [nzSm]="19">
+                <nz-radio-group formControlName="status">
+                  <label nz-radio-button [nzValue]="0">
+                    <span>可用</span>
+                  </label>
+                  <label nz-radio-button [nzValue]="3">
+                    <span>不可用</span>
+                  </label>
+                </nz-radio-group>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="7" [formGroupName]="i">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="5">
+                <label for="remark">备注</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="19">
+                <nz-input formControlName="remark" [nzPlaceHolder]="'车位备注'" [nzId]="'remark'">
+                </nz-input>
+              </div>
+            </div>
+          </div>
+          <div nz-col [nzSpan]="2" class="parking_spaces_button">
+            <button type="button" nz-button [nzType]="'danger'" [nzSize]="'small'" [nzShape]="'circle'" *ngIf="parking_spaces.controls.length > 1"
+              (click)="removeParking_space(i)">
+              <i class="anticon anticon-close"></i>
+            </button>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col [nzSpan]="7">
+            <div nz-row>
+              <div nz-col [nzOffset]="5">
+                <button nz-button type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="addParking_space()">
+                  <i class="anticon anticon-plus"></i>
+                  <span>添加车位</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="customize-footer">
+        <button [nzType]="'primary'" [nzLoading]="_loading" nz-button [nzSize]="'large'" [disabled]="form.invalid">
+          <span>{{actionName}}</span>
+        </button>
+        <button type="button" nz-button [nzType]="'default'" [nzSize]="'large'" [disabled]="closeBtnDisable" (click)="closeParkingSpaceOperateModel()">
+          <span>关 闭</span>
+        </button>
+    </div>
+</form>
+<form nz-form [formGroup]="form" (ngSubmit)="submitParkingSpaceForm()" *ngIf="id">
+  <div nz-form-item nz-row>
+    <div nz-form-label nz-col [nzSm]="4">
+      <label for="rid" nz-form-item-required>
+        <span>车位编号</span>
+      </label>
+    </div>
+    <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="rid">
+      <nz-input formControlName="rid" nzPlaceHolder="车位编号" [nzId]="'rid'"></nz-input>
+      <div nz-form-explain *ngIf="(rid.dirty || rid.touched) && rid.errors?.required">请填写车位编号！</div>
+    </div>
+  </div>
+  <div nz-form-item nz-row>
+    <div nz-form-label nz-col [nzSm]="4">
+      <label for="parking_lock" nz-form-item-required>
+        <span>地锁编号</span>
+      </label>
+    </div>
+    <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="parking_lock">
+      <nz-input formControlName="parking_lock" nzPlaceHolder="地锁编号" [nzId]="'parking_lock'"></nz-input>
+      <div nz-form-explain *ngIf="(parking_lock.dirty || parking_lock.touched) && parking_lock.errors?.required">请填写地锁编号！</div>
+    </div>
+  </div>
+  <div nz-form-item nz-row>
+    <div nz-form-label nz-col [nzSm]="4">
+      <label for="status" nz-form-item-required>
+        <span>状态</span>
+      </label>
+    </div>
+    <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="status">
+      <nz-radio-group formControlName="status">
+        <label nz-radio-button [nzValue]="0" [nzDisabled]="status.value===1 || status.value===2?true:false">
+          <span>可用</span>
+        </label>
+        <label nz-radio-button [nzDisabled]="'true'" [nzValue]="1">
+          <span>已预约</span>
+        </label>
+        <label nz-radio-button [nzDisabled]="'true'" [nzValue]="2">
+          <span>已停车</span>
+        </label>
+        <label nz-radio-button [nzValue]="3" [nzDisabled]="status.value===1 || status.value===2?true:false">
+          <span>不可用</span>
+        </label>
+      </nz-radio-group>
+    </div>
+  </div>
+  <div nz-form-item nz-row>
+    <div nz-form-label nz-col [nzSm]="4">
+      <label for="remark">
+        <span>备注</span>
+      </label>
+    </div>
+    <div nz-form-control nz-col [nzSm]="20">
+      <nz-input formControlName="remark" nzPlaceHolder="车位编号" [nzId]="'remark'"></nz-input>
+    </div>
+  </div>
+  <div class="customize-footer">
+    <button [nzType]="'primary'" [nzLoading]="_loading" nz-button [nzSize]="'large'" [disabled]="form.invalid">
+      <span>{{actionName}}</span>
+    </button>
+    <button type="button" nz-button [nzType]="'default'" [nzSize]="'large'" [disabled]="closeBtnDisable" (click)="closeParkingSpaceOperateModel()">
+      <span>关 闭</span>
+    </button>
 </div>
+</form>

@@ -83,10 +83,12 @@ export class ParkingOperateComponent implements OnInit {
   get location_form() { return this.form.controls.location; }
   get charges() { return this.form.controls.charges; }
   get free_time() { return this.form.controls.free_time; }
-  get parking_spaces() { return this.form.controls.parking_spaces; }
   ngOnInit() {
+    this.id = this.routeInfo.snapshot.queryParams['id'];
     let barrier_gates_form = [];
-    barrier_gates_form = [this.buildBarrier_gate()];
+    if (!this.id) {
+      barrier_gates_form = [this.buildBarrier_gate({ Btype: '1' }), this.buildBarrier_gate({ Btype: '0' })];
+    }
     this.form = this.fb.group({
       name: [null, [Validators.required]],
       principal: null,
@@ -96,21 +98,18 @@ export class ParkingOperateComponent implements OnInit {
       free_time: ['0', Validators.required],
       china_division: null,
       search_area: null,
-      parking_spaces: ['1', Validators.required],
       barrier_gates: this.fb.array(barrier_gates_form)
     });
-    this.id = this.routeInfo.snapshot.queryParams['id'];
+
     if (this.id) {
-      this._loadingId = this.msg.loading('读取数据中...', { nzDuration: 0 }).messageId;
+      this._loadingId = this.msg.loading('读取数据中，请稍后...', { nzDuration: 0 }).messageId;
       this.actionName = '修改停车场';
       this.actionBtn = '修改';
       this.titleSvc.setTitle(this.actionName);
       const barrier_gates_field = <FormArray>this.form.controls['barrier_gates'];
-      barrier_gates_field.removeAt(0);
       this.park = this.parksSvc.getPark(this.id).subscribe((data: any) => {
         this.form.patchValue({
           'name': data.name,
-          'parking_spaces': data.parking_spaces,
           'charges': data.charges,
           'free_time': data.free_time,
           'location': data.location,

@@ -33,5 +33,9 @@ export class ParkingsService {
     deleteParking(id) {
         return this.http.delete('parking/' + id);
     }
+
+    deleteParkingSpace(id) {
+        return this.http.delete('parkingspace/' + id);
+    }
     constructor(private http: _HttpClient) { }
 }

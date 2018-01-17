@@ -3,6 +3,7 @@ import { ParkingsService } from 'app/routes/parkings/parkings.service';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { ParkingSpacesComponent } from 'app/routes/parkings/parking-spaces/parking-spaces.component';
+import { ParkingSpaceOperateComponent } from 'app/routes/parkings/parking-spaces/parking-space-operate/parking-space-operate.component';
 
 @Component({
   selector: 'app-parks',
@@ -34,6 +35,7 @@ export class ParkingsComponent implements OnInit {
       this._dataSet = data.data;
     });
   }
+
   deleteParking(id) {
     this._loading = true;
     this.park.deleteParking(id).subscribe((data: any) => {
@@ -46,17 +48,19 @@ export class ParkingsComponent implements OnInit {
     });
   }
 
-  addParkingSpace(e, titleTpl, contentTpl, footerTpl, id, pname) {
-    this._title = '添加停车位（' + pname + '）';
+  addParkingSpace(pid, pname) {
+    const _title = '添加停车位（' + pname + '）';
     this.addModel = this.modalService.open({
-      title: titleTpl,
-      content: contentTpl,
-      footer: footerTpl,
+      title: _title,
+      content: ParkingSpaceOperateComponent,
+      footer: false,
+      closable: false,
       maskClosable: false,
-      width: 600,
+      width: '80%',
       zIndex: 1100,
       componentParams: {
-        id: id
+        pid: pid,
+        has_list: false
       }
     });
   }
@@ -73,7 +77,7 @@ export class ParkingsComponent implements OnInit {
       width: '80%',
       footer: false,
       componentParams: {
-        id: id,
+        pid: id,
         pname: pname
       }
     });

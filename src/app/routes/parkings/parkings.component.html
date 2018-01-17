@@ -79,7 +79,7 @@
                                 <a rel="noopener noreferrer" (click)="parkingSpaces(data.id, data.name)">车位列表</a>
                             </li>
                             <li nz-menu-item>
-                                <a rel="noopener noreferrer" (click)="addParkingSpace($event, title, content, footer, data.id, data.name)">添加车位</a>
+                                <a rel="noopener noreferrer" (click)="addParkingSpace(data.id, data.name)">添加车位</a>
                             </li>
                         </ul>
                     </nz-dropdown>
@@ -94,25 +94,3 @@
         </tbody>
     </nz-table>
 </nz-card>
-<ng-template #title>
-    <span>{{_title}}</span>
-</ng-template>
-<ng-template #content>
-    <div>
-        <p>对话框的内容dfgsd</p>
-        <p>对话框的内容</p>
-        <p>对话框的内容</p>
-        <p>对话框的内容</p>
-        <p>对话框的内容</p>
-    </div>
-</ng-template>
-<ng-template #footer>
-    <div>
-        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleOk($event)" [nzLoading]="isConfirmLoading">
-        <span>提 交</span>
-      </button>
-        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="closeAddModel($event)">
-        <span>关 闭</span>
-      </button>
-    </div>
-</ng-template>

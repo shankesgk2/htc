@@ -1,15 +1,18 @@
 <div>
-    <nz-table #nzTable [nzBordered]="'true'" [nzAjaxData]="_dataSet" nzShowSizeChanger [nzLoading]="_loading" [nzTotal]="_total" [(nzPageIndex)]="_current" (nzPageIndexChange)="refreshData()" [(nzPageSize)]="_pageSize" (nzPageSizeChange)="refreshData(true)">
+    <nz-table #nzTable [nzSize]="'small'" [nzBordered]="'true'" [nzAjaxData]="_dataSet" nzShowSizeChanger [nzLoading]="_loading" [nzTotal]="_total" [(nzPageIndex)]="_current" (nzPageIndexChange)="refreshData()" [(nzPageSize)]="_pageSize" (nzPageSizeChange)="refreshData(true)">
         <thead nz-thead>
             <tr>
                 <th nz-th>
                     <span>ID</span>
                 </th>
                 <th nz-th>
-                    <span>编号</span>
+                    <span>车位编号</span>
                 </th>
                 <th nz-th>
-                    <span>车位号</span>
+                    <span>地锁编号</span>
+                </th>
+                <th nz-th>
+                    <span>状态</span>
                 </th>
                 <th nz-th>
                     <span>当前车牌</span>
@@ -29,25 +32,32 @@
             <tr nz-tbody-tr *ngFor="let data of nzTable.data">
                 <td nz-td>{{data.id}}</td>
                 <td nz-td>{{data.rid}}</td>
-                <td nz-td>{{data.rname}}</td>
+                <td nz-td>{{data.parking_lock}}</td>
+                <td nz-td [ngSwitch]="data.status">
+                    <nz-tag *ngSwitchCase="0" [nzColor]="'green'">空闲</nz-tag>
+                    <nz-tag *ngSwitchCase="1" [nzColor]="'pink'">已预约</nz-tag>
+                    <nz-tag *ngSwitchCase="2" [nzColor]="'cyan'">已停车</nz-tag>
+                    <nz-tag *ngSwitchCase="3" [nzColor]="'red'">不可用</nz-tag>
+                </td>
                 <td nz-td>{{data.number_plate}}</td>
                 <td nz-td>{{data.created_at | _date: 'YY-MM-DD HH:mm'}}</td>
                 <td nz-td>{{data.updated_at | _date: 'YY-MM-DD HH:mm'}}</td>
                 <td nz-td>
-                    <a [routerLink]="['operate']" [queryParams]="{ id: data.id }">修改</a>
+                    <a (click)="editParkingSpace(data.id, data.rid, data.parking_lock, data.status, data.remark)">修改</a>
                     <span nz-table-divider></span>
-                    <nz-popconfirm [nzTitle]="'确定要删除吗？'" [nzOkText]="'是'" [nzCancelText]="'取消'" (nzOnConfirm)="deleteParking(data.id)">
+                    <nz-popconfirm *ngIf="data.status===0 || data.status===3" [nzTitle]="'确定要删除吗？'" [nzOkText]="'是'" [nzCancelText]="'取消'" (nzOnConfirm)="deleteParkingSpace(data.id)">
                         <a nz-popconfirm>删除</a>
                     </nz-popconfirm>
+                    <span *ngIf="data.status===1 || data.status===2">删除</span>
                 </td>
             </tr>
         </tbody>
     </nz-table>
     <div class="customize-footer">
-        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="addParkingSpace($event)">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="addParkingSpace()">
           <span>添加车位</span>
         </button>
-        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="closeParkingSpaceModel($event)">
+        <button nz-button [nzType]="'default'" [nzSize]="'large'" (click)="closeParkingSpaceModel()">
           <span>关 闭</span>
         </button>
     </div>
