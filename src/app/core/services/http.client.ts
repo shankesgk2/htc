@@ -48,7 +48,9 @@ export class _HttpClient {
                     }
                     break;
                 default:
-                    this._msg.error(error.message);
+                    if (environment.debug) {
+                        this._msg.error(error.message);
+                    }
                     break;
             }
         } else {

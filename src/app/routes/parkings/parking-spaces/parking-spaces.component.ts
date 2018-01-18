@@ -101,8 +101,13 @@ export class ParkingSpacesComponent implements OnInit {
       this.msg.success('删除成功');
       this.refreshData();
     }, (error: HttpErrorResponse) => {
+      console.log(error);
       this._loading = false;
-      this.msg.error('删除失败');
+      if (error.error.message) {
+        this.msg.error(error.error.message);
+      } else {
+        this.msg.error('删除失败');
+      }
     });
   }
 
