@@ -15,7 +15,7 @@
   "scripts": {
     "precommit": "npm run lint-staged",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o --delete-output-path=false",
     "serve:hmr": "ng serve --hmr -e=hmr",
     "build": "ng build --prod --aot --build-optimizer --base-href ./",
     "build.evn": "ng build --prod --aot --build-optimizer --base-href ./ --environment=environment",
