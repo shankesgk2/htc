@@ -81,7 +81,7 @@ export class ParkingOperateComponent implements OnInit {
   get principal() { return this.form.controls.principal; }
   get contact_information() { return this.form.controls.contact_information; }
   get location_form() { return this.form.controls.location; }
-  get charges() { return this.form.controls.charges; }
+  get price() { return this.form.controls.price; }
   get free_time() { return this.form.controls.free_time; }
   ngOnInit() {
     this.id = this.routeInfo.snapshot.queryParams['id'];
@@ -94,7 +94,7 @@ export class ParkingOperateComponent implements OnInit {
       principal: null,
       contact_information: null,
       location: [null, Validators.required],
-      charges: ['2.00', Validators.required],
+      price: ['2.00', Validators.required],
       free_time: ['0', Validators.required],
       china_division: null,
       search_area: null,
@@ -110,7 +110,7 @@ export class ParkingOperateComponent implements OnInit {
       this.park = this.parksSvc.getPark(this.id).subscribe((data: any) => {
         this.form.patchValue({
           'name': data.name,
-          'charges': data.charges,
+          'price': data.price,
           'free_time': data.free_time,
           'location': data.location,
           'principal': data.principal,

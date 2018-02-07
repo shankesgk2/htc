@@ -106,17 +106,17 @@
           </div>
           <div nz-form-item nz-row>
             <div nz-form-label nz-col [nzSm]="4">
-              <label for="charges">
+              <label for="price">
                 <span>收费标准</span>
               </label>
             </div>
             <div nz-form-control nz-col [nzSm]="20">
-              <nz-input formControlName="charges" [nzPlaceHolder]="'元/时'" [nzId]="'charges'" style="width:100px;">
+              <nz-input formControlName="price" [nzPlaceHolder]="'元/时'" [nzId]="'price'" style="width:100px;">
                 <ng-template #addOnAfter>
                   元/时
                 </ng-template>
               </nz-input>
-              <div nz-form-explain *ngIf="(charges.dirty || charges.touched) && charges.errors?.required">请填写收费标准！</div>
+              <div nz-form-explain *ngIf="(price.dirty || price.touched) && price.errors?.required">请填写收费标准！</div>
             </div>
           </div>
           <div nz-form-item nz-row>
@@ -126,7 +126,7 @@
               </label>
             </div>
             <div nz-form-control nz-col [nzSm]="20" nzHasFeedback [nzValidateStatus]="free_time">
-              <nz-input formControlName="free_time" [nzId]="'charges'" style="width:100px;">
+              <nz-input formControlName="free_time" [nzId]="'free_time'" style="width:100px;">
                 <ng-template #addOnAfter>
                   分钟
                 </ng-template>
