@@ -35,7 +35,6 @@ export class OperateComponent implements OnInit {
       return new Promise((resolve, reject) => {
         const a = this.http.post_patch('admin', this.id, this.form.value, { observe: 'response' })
           .subscribe((resp: HttpResponse<any>) => {
-            console.log(resp);
             this._loading = false;
             this.msg.remove(this._loadingId);
             if (resp.status === 201) {

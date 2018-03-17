@@ -49,7 +49,7 @@ export class _HttpClient {
                     break;
                 default:
                     if (environment.debug) {
-                        this._msg.error(error.message);
+                        this._msg.error(error.error.message, {nzDuration: 5000});
                     }
                     break;
             }
