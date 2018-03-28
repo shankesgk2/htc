@@ -5,7 +5,7 @@
 
 export const environment = {
     SERVER_URL: `http://www.htc.com/api/admin/`,
-    INIT_JSON: 'http://localhost:4200/assets/app-data.json',
+    INIT_JSON: 'http://localhost:4201/assets/app-data.json',
     debug: true,
     production: false,
     hmr: false

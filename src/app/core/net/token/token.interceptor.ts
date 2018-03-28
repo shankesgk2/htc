@@ -41,7 +41,7 @@ export class TokenInterceptor implements HttpInterceptor {
         //     header = req.headers.set('Accept', 'application/vnd.ds.v1+json');
         // }
         const token = localStorage.getItem('token');
-        header = req.headers.append('Accept', 'application/vnd.ds.v1+json');
+        header = req.headers.append('Accept', 'application/vnd.ds.v1+json').append('Authorization', 'Bearer ' + token);
         params = req.params.append('XDEBUG_SESSION_START', 'PHPSTORM');
 
         // 统一加上服务端前缀
